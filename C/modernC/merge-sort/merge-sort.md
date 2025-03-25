@@ -20,8 +20,9 @@ total work = height X work per level = log n X n (if don't get it I'll try to ex
 if you want to be like a mathematician about it, here is divide-and-conquer recurrence or the master theorem recurrence. This reference if from [CLRS](../../../books/algorithms/Introduction.to.Algorithms.4th.Leiserson.Stein.Rivest.Cormen.MIT.Press.9780262046305.EBooksWorld.ir.pdf).
 
 The recurrence relation for merge sort is:
+
 $$
-T(n) = 2T\left(\frac{n}{2}\right) + \Theta(n)
+    T(n) = 2T\left(\frac{n}{2}\right) + \Theta(n)
 $$
 
 and after applying the master theorem(trust me read [CLRS](../../../books/algorithms/Introduction.to.Algorithms.4th.Leiserson.Stein.Rivest.Cormen.MIT.Press.9780262046305.EBooksWorld.ir.pdf) and search master theorem and also read chapter 3, it'll will help):
