@@ -1,6 +1,8 @@
 # The Core Dump
 
-These are my reverse engineering, programming and cyber-security notes that I've made from various places (you can ask if you want [here](mailto:ben.karanja@icloud.com)).
+
+This is my Segfault Sanctuary, where my segmentation faults find refuge before being debugged.
+Contains my reverse engineering, programming and cyber-security notes that I've made from various sources.
 
 Please feel free to critique and also contribute if you want but creating an [issue](https://github.com/bernie-haxx/The-Core-Dump/issues/).
 
