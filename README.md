@@ -1,7 +1,8 @@
 # The Core Dump
-*To confuse your enemy, first confuse yourself* ~ The Art of War - Sun Tzu
+>*To confuse your enemy, first confuse self* ~ **The Art of War - Sun Tzu**
 
-This is my Segfault Sanctuary, where my segmentation faults find refuge before being debugged.
+## Introduction from our sponsors
+This is a Segfault Sanctuary, where my segmentation faults find refuge before being debugged.
 
 Contains my reverse engineering, programming and cyber-security notes that I've made from various sources.
 
