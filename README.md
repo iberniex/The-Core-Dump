@@ -10,7 +10,8 @@ Contains some Computer Science related topics such as reverse engineering, progr
 
 Please feel free to critique and also contribute if you want but creating an [issue](https://github.com/bernie-haxx/The-Core-Dump/issues/).
 
-This is a progressive learning experience and just using this repository to store these findings. CAUTION: it may not be perfect(reread for the people in the back).
+This is a progressive learning experience and just using this repository to store these findings.
+CAUTION: it may not be perfect (reread for the people in the back).
 
 ## Index
 
