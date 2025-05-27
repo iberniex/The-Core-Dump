@@ -1,4 +1,4 @@
-property playerList : {"Spotify", "Music", "Tidal", "Safari", "Google Chrome", "Firefox"}
+property playerList : {"Spotify", "Music", "Tidal", "Safari", "Google Chrome", "Firefox", "Core" }
 property nativePlayerList : { "Spotify", "Music", "Tidal" }
 
 on detectPlayer()
