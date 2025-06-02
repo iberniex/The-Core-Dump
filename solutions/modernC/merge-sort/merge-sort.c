@@ -1,4 +1,5 @@
-/* merge sort algorithm: Version 1
+/*
+ * merge sort algorithm: Version 1
  * Author: iberniex
  * Purpose: To becoming a programmer and segmentation fault enthusiast
  * Study: ModernC and CLRS: Introduction to algorithms and data structures for
