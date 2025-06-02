@@ -1,3 +1,54 @@
+property playerList : {"Spotify", "Music", "Safari", "Google Chrome", "Firefox"}
+property nativePlayerList : {"Spotify", "Music"}
+
+
+on detectPlayer()
+	repeat with appName in playerList
+		set currentApp to contents of appName
+		if (running of application currentApp) then
+			if (currentApp is not in nativePlayerList) then
+				return browserPlayer(currentApp)
+			else
+				return nativePlayer(currentApp)
+			end if
+		else
+		end if
+	end repeat
+	
+	return "No App Supported"
+end detectPlayer
+
+
+on nativePlayer(nativeName)
+	if not (running of application nativeName) then return "not running"
+	if nativeName is "Spotify" then
+		tell application "Spotify"
+			if player state is stopped then return "stopped"
+			set trackArtist to artist of current track
+			set trackName to name of current track
+			if player state is paused then
+				return trackArtist & " - " & trackName
+			else
+				return trackArtist & " - " & trackName
+			end if
+			
+		end tell
+	else if nativeName is "Music" then
+		tell application "Music"
+			if player state is stopped then return "stopped"
+			set trackArtist to artist of current track
+			set trackName to name of current track
+			if player state is paused then
+				return trackArtist & " - " & trackName
+			else
+				return trackArtist & " - " & trackName
+			end if
+			
+		end tell
+	end if
+	
+end nativePlayer
+
 on browserPlayer(browserName)
 	if (running of application "Safari") and (browserName is "Safari") then
 		tell application "Safari"
@@ -34,7 +85,7 @@ on browserPlayer(browserName)
 		end if
 		-- Check if it's a Spotify video page
 	else if currentURL contains "open.spotify.com" then
-		-- YouTube video titles usually follow this format: "Artist - Track Name"
+		-- Spotify video titles usually follow this format: "Artist • Track Name"
 		set AppleScript's text item delimiters to " • "
 		set titleParts to text items of pageTitle
 		
@@ -50,11 +101,11 @@ on browserPlayer(browserName)
 		
 		
 	else
-		display dialog "No active YT Tab"
+		return "No active Tab"
 	end if
 	
 end browserPlayer
 
 
-browserPlayer("Google Chrome")
+detectPlayer()
 
