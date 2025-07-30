@@ -13,6 +13,26 @@ enum UsState {
     UmpaLumpa,
 }
 
+impl UsState {
+    fn existed_in(&self, year: u16) -> bool {
+        match self {
+            UsState::Alaska => year >= 1819,
+            UsState::UmpaLumpa => year >= 1959,
+        }
+    }
+}
+
+fn describe_state_quarter(coin: Coin) -> Option<String> {
+    let Coin::Quarter(state) = coin else {
+        return None;
+    };
+    if state.existed_in(1900) {
+        Some(format!("{state:?} is pretty old, for America"))
+    } else {
+        Some(format!("{state:?} is is relatively new"))
+    }
+}
+
 fn plus_one(x: Option<i32>) -> Option<i32> {
     x.map(|i| i + 1)
     // match x {
@@ -42,6 +62,10 @@ fn main() {
         value_in_cents(Coin::Quarter(UsState::Alaska))
     );
 
+    println!(
+        "value of a quarter: {:?}",
+        describe_state_quarter(Coin::Quarter(UsState::UmpaLumpa))
+    );
     let five = Some(5);
     let six = plus_one(five);
     let none = plus_one(None);
