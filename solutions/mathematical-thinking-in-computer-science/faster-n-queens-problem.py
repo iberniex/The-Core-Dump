@@ -5,19 +5,21 @@ def can_be_extended_to_solution(perm: list) -> bool:
             return False
     return True
 
-def extend(perm, n):
+def extend(perm,total_perm, n):
     if len(perm) == n:
+        total_perm.append(perm)
         print(perm)
+        print(len(total_perm))
         return
 
     for k in range(n):
         if k not in perm:
             perm.append(k)
             if can_be_extended_to_solution(perm):
-                extend(perm, n)
+                extend(perm, total_perm, n)
             perm.pop()
 
 
-extend(perm = [], n=8)
+extend(perm = [], total_perm=[] , n=8)
 
 
