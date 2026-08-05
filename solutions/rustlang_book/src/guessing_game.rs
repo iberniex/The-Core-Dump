@@ -4,6 +4,24 @@ pub mod guessing_game {
     use std::io;
 
     use rand;
+    #[derive(Debug)]
+    struct Guess {
+        value: i64,
+    }
+
+    impl Guess {
+        pub fn new(value: i64) -> Guess {
+            if value < 1 || value > 100 {
+                panic!("The value should be in the range: 0-100 \n");
+            }
+
+            Guess { value }
+        }
+
+        pub fn value(&self) -> i64 {
+            self.value
+        }
+    }
 
     pub fn guessing_game_function() {
         println!("Guess the number");
@@ -22,14 +40,14 @@ pub mod guessing_game {
                 .read_line(&mut guess)
                 .expect("Failed to read line");
 
-            let guess: u32 = match guess.trim().parse() {
-                Ok(num) => num,
+            let guess: Guess = match guess.trim().parse() {
+                Ok(num) => Guess::new(num),
                 Err(_) => continue,
             };
 
-            println!("You guessed: {guess}");
+            println!("You guessed: {}", guess.value());
 
-            match guess.cmp(&secret_number) {
+            match guess.value().cmp(&secret_number) {
                 Ordering::Less => println!("Too small!"),
                 Ordering::Greater => println!("Too big!"),
                 Ordering::Equal => {
