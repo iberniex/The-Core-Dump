@@ -14,6 +14,16 @@ impl Rectangle {
     }
 }
 
+// Associated functions
+impl Rectangle {
+    fn square(val: u64) -> Rectangle {
+        Rectangle {
+            width: val,
+            length: val,
+        }
+    }
+}
+
 fn main() {
     // refactoring
     // let width = 30;
@@ -32,6 +42,8 @@ fn main() {
         length: 50,
     };
 
+    let rect3 = Rectangle::square(24);
+
     println!("rect1 compared to rect2 {}", &rect1.compare(&rect2));
 
     println!(
@@ -40,4 +52,6 @@ fn main() {
     );
 
     println!("rectl is {rect1:#?}");
+
+    println!("rect3 is {:#?}", rect3);
 }
