@@ -7,4 +7,5 @@ pub mod lifetimes;
 pub mod nth_fibonacci;
 pub mod struct_rectangle;
 pub mod temperature_converter;
+pub mod tests;
 pub mod trait_implementation;
