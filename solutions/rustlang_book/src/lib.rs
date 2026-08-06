@@ -1,3 +1,4 @@
+pub mod factorial;
 pub mod first_word;
 pub mod generic_types;
 pub mod guessing_game;
