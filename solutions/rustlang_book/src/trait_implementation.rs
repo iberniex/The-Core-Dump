@@ -23,8 +23,33 @@ impl Summarize for Tweet {
         return format!("{},  by {}", self.username, self.content);
     }
 }
+
 trait Summarize {
-    fn summarize(&self) -> String;
+    fn summarize(&self) -> String {
+        String::from("(Read for more) ...")
+    }
+}
+
+// traits as parameters
+// fn notify(item: &impl Summarize) {
+//     println!("Breaking news! - {}", item.summarize())
+// }
+
+// summary trait
+// Trait Bound
+fn notify<T: Summarize>(item: &T) {
+    println!("Breaking news! - {}", item.summarize())
+}
+
+fn return_summarizable() -> impl Summarize {
+    Article {
+        headline: String::from("Penguins win the Stanley Cup Championship!"),
+        author: String::from("Iceburgh"),
+        content: String::from(
+            "The Pittsburgh Penguins once again are the best \
+                 hockey team in the NHL.",
+        ),
+    }
 }
 
 pub fn content_summarization() {
@@ -48,4 +73,7 @@ pub fn content_summarization() {
         tweet.reply,
         tweet.retweet
     );
+
+    notify(&tweet);
+    return_summarizable().summarize();
 }
