@@ -1,10 +1,13 @@
-// #[warn(unused_import)]
-
-// use rustlang_book::hashmaps::hashmaps::word_count;
-
-use rustlang_book::guessing_game::guessing_game::guessing_game_function;
-
+use rustlang_book::{
+    generic_types::generic_types::{impl_testing, largest_number},
+    lifetimes::largest,
+};
 fn main() {
-    guessing_game_function();
-    // word_count();
+    let list_of_nums = vec![23, 342, 123, 12312, 31223];
+    let largest_number = largest_number(list_of_nums);
+    let largest_string = largest("ready", "reaaaddyyyyy");
+    println!("This is the largest string - {}", largest_string);
+    println!("The large number in {}", largest_number);
+
+    impl_testing();
 }
