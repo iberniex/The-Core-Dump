@@ -1,59 +1,56 @@
-pub mod guessing_game {
+use std::cmp::Ordering;
+use std::io;
 
-    use std::cmp::Ordering;
-    use std::io;
+use rand;
+#[derive(Debug)]
+pub struct Guess {
+    value: i64,
+}
 
-    use rand;
-    #[derive(Debug)]
-    struct Guess {
-        value: i64,
-    }
-
-    impl Guess {
-        pub fn new(value: i64) -> Guess {
-            if value < 1 || value > 100 {
-                panic!("The value should be in the range: 0-100 \n");
-            }
-
-            Guess { value }
+impl Guess {
+    pub fn new(value: i64) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("The value should be in the range: 0-100 \n");
         }
 
-        pub fn value(&self) -> i64 {
-            self.value
-        }
+        Guess { value }
     }
 
-    pub fn guessing_game_function() {
-        println!("Guess the number");
+    pub fn value(&self) -> i64 {
+        self.value
+    }
+}
 
-        // let secret_number = rand::thread_rng().gen_range(1..=100);
-        let secret_number = rand::random_range(1..=100);
+pub fn guessing_game_function() {
+    println!("Guess the number");
 
-        // println!("The secret number is {secret_number}");
+    // let secret_number = rand::thread_rng().gen_range(1..=100);
+    let secret_number = rand::random_range(1..=100);
 
-        loop {
-            println!("Please input your guess");
+    // println!("The secret number is {secret_number}");
 
-            let mut guess = String::new();
+    loop {
+        println!("Please input your guess");
 
-            io::stdin()
-                .read_line(&mut guess)
-                .expect("Failed to read line");
+        let mut guess = String::new();
 
-            let guess: Guess = match guess.trim().parse() {
-                Ok(num) => Guess::new(num),
-                Err(_) => continue,
-            };
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Failed to read line");
 
-            println!("You guessed: {}", guess.value());
+        let guess: Guess = match guess.trim().parse() {
+            Ok(num) => Guess::new(num),
+            Err(_) => continue,
+        };
 
-            match guess.value().cmp(&secret_number) {
-                Ordering::Less => println!("Too small!"),
-                Ordering::Greater => println!("Too big!"),
-                Ordering::Equal => {
-                    println!("you win!");
-                    break;
-                }
+        println!("You guessed: {}", guess.value());
+
+        match guess.value().cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => {
+                println!("you win!");
+                break;
             }
         }
     }
