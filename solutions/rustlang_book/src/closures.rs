@@ -144,6 +144,7 @@ pub fn closure_runner() {
         sort_operations_counter += 1;
         r.width
     });
+    println!("{:?}", rect_list[0].height);
     println!("{rect_list:?}");
 
     let simulated_intensity = 10;
