@@ -15,4 +15,15 @@ pub mod hashmaps {
             print!("{} - {}\n", key, value);
         }
     }
+
+    pub fn word_counter<'a>(words: &'a [&'a str]) -> HashMap<&'a str, i32> {
+        let mut map = HashMap::new();
+        for word in words {
+            let entry = map.entry(*word).or_insert(0);
+            *entry += 1;
+        }
+        // Count each word
+
+        map
+    }
 }
