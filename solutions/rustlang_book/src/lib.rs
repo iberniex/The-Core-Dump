@@ -1,3 +1,4 @@
+pub mod closures;
 pub mod factorial;
 pub mod first_word;
 pub mod generic_types;

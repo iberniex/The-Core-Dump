@@ -1,4 +1,4 @@
-use rustlang_book::{generic_types::largest_number, lifetimes::largest, minigrep::worker};
+use rustlang_book::{closures::closure_runner, generic_types::largest_number, lifetimes::largest};
 fn main() {
     let list_of_nums = vec![23, 342, 123, 12312, 31223];
     let largest_number = largest_number(list_of_nums);
@@ -6,5 +6,7 @@ fn main() {
     println!("This is the largest string - {}", largest_string);
     println!("The large number in {}", largest_number);
 
-    worker();
+    // worker();
+
+    closure_runner();
 }
