@@ -5,6 +5,7 @@ pub mod generic_types;
 pub mod guessing_game;
 pub mod hashmaps;
 pub mod improved_temperature_conv;
+pub mod iterators;
 pub mod lifetimes;
 pub mod minigrep;
 pub mod nth_fibonacci;
