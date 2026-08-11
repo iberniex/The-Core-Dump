@@ -1,13 +1,13 @@
 use std::{thread, time::Duration};
 
 #[derive(PartialEq, Clone, Copy, Debug)]
-enum ShirtColor {
+pub enum ShirtColor {
     Red,
     Blue,
 }
 
-struct Inventory {
-    shirts: Vec<ShirtColor>,
+pub struct Inventory {
+    pub shirts: Vec<ShirtColor>,
 }
 
 #[derive(Debug)]
@@ -16,12 +16,29 @@ struct Rectangle {
     height: u32,
 }
 
+/// Implementation of Inventory
+/// This implementation block contains 2 functions which are `giveaway` and `most_stocked`
+/// ```
+/// use rustlang_book::closures::*;
+///
+///let store = Inventory {
+///        shirts: vec![ShirtColor::Blue, ShirtColor::Red, ShirtColor::Blue],
+///  };
+///
+/// let user_pref1 = Some(ShirtColor::Red);
+/// let giveaway1 = store.giveaway(user_pref1);
+///
+/// assert_eq!(giveaway1, ShirtColor::Red);
+///
+/// let user_pref2: Option<ShirtColor> = None;
+/// let giveaway2 = store.giveaway(user_pref2);
+///    ````
 impl Inventory {
-    fn giveaway(&self, user_preference: Option<ShirtColor>) -> ShirtColor {
+    pub fn giveaway(&self, user_preference: Option<ShirtColor>) -> ShirtColor {
         user_preference.unwrap_or_else(|| self.most_stocked())
     }
 
-    fn most_stocked(&self) -> ShirtColor {
+    pub fn most_stocked(&self) -> ShirtColor {
         let mut red_shirt: u32 = 0;
         let mut blue_shirt: u32 = 0;
 
