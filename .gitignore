@@ -6,3 +6,4 @@
 *.pyc
 /Solutions/rustlang_book/target
 /Solutions/Kata/rust/target
+/Solutions/Leetcode/rust/target
