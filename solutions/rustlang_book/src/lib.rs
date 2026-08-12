@@ -9,6 +9,7 @@ pub mod iterators;
 pub mod lifetimes;
 pub mod minigrep;
 pub mod nth_fibonacci;
+pub mod smart_pointers;
 pub mod struct_rectangle;
 pub mod temperature_converter;
 pub mod test;

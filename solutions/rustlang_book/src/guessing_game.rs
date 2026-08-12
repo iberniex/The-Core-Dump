@@ -1,6 +1,8 @@
 use std::cmp::Ordering;
 use std::io;
 
+pub use self::guessing_game_function as guessing_game;
+
 use rand;
 #[derive(Debug)]
 pub struct Guess {

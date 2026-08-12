@@ -57,7 +57,7 @@ impl Inventory {
     }
 }
 
-struct Cacher<T>
+pub struct Cacher<T>
 where
     T: Fn(u32) -> u32,
 {
