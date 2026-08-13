@@ -21,7 +21,7 @@ impl<T> Deref for MyBox<T> {
 // Drop Trait
 // Implementation of the Drop Trait on a structure CustomSmartPointer
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct CustomSmartPointer {
     string: String,
 }
@@ -32,6 +32,27 @@ impl Drop for CustomSmartPointer {
     }
 }
 
+/// calling s.drop() from std::mem::drop
+/// would lead to a double free error cause rust calls s.drop() anyway.
+///
+///```
+///
+/// #[derive(Debug, Clone)]
+/// struct CustomSmartPointer {
+///     string: String,
+/// }
+///
+/// impl Drop for CustomSmartPointer {
+///     fn drop(&mut self) {
+///         println!("Dropping CustomSmartPointer with data {}", self.string)
+///     }
+/// }
+///
+/// let v = CustomSmartPointer {
+/// string: String::from("Example test"),
+/// };
+/// drop(v);
+/// ```
 pub fn testing_box_smart_pointer() {
     let s = MyBox::new(5);
 
@@ -47,5 +68,6 @@ pub fn testing_box_smart_pointer() {
         string: String::from("Ready"),
     };
 
-    println!("Smart Pointer {s:?} Created")
+    drop(s);
+    println!("The smart pointer has been dropped before the end of main.")
 }
