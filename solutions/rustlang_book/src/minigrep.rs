@@ -7,13 +7,17 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &str> {
-        if args.len() < 3 {
-            return Err("No arguments passed");
-        }
+    pub fn new(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+        args.next();
 
-        let query = args[1].clone();
-        let filepath = args[2].clone();
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("The value provided does not evaluate to String"),
+        };
+        let filepath = match args.next() {
+            Some(arg) => arg,
+            None => return Err("The value provided is not a valid filepath"),
+        };
         let case_sensitive = env::var("CASE_INSENSITIVE").is_ok();
 
         Ok(Config {
@@ -25,9 +29,7 @@ impl Config {
 }
 
 pub fn worker() {
-    let args: Vec<String> = env::args().collect();
-
-    let config = Config::new(&args).unwrap_or_else(|err| {
+    let config = Config::new(env::args()).unwrap_or_else(|err| {
         eprintln!("Problem passing arguments: {}", err);
         process::exit(1)
     });
@@ -54,28 +56,28 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let query = query.to_lowercase();
-    let mut result = Vec::new();
-
-    for line in contents.lines() {
-        if line.to_lowercase().contains(&query) {
-            result.push(line)
-        }
-    }
-
-    result
+pub fn search_case_insensitive<'a>(
+    query: &'a str,
+    contents: &'a str,
+) -> Box<dyn Iterator<Item = &'a str> + 'a> {
+    // let query = query.to_lowercase();
+    // let mut result = Vec::new();
+    //
+    // for line in contents.lines() {
+    //     if line.to_lowercase().contains(&query) {
+    //         result.push(line)
+    //     }
+    // }
+    //
+    // result
+    Box::new(
+        contents
+            .lines()
+            .filter(move |line| line.to_lowercase().contains(&query.to_lowercase())),
+    )
 }
-pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut result = Vec::new();
-
-    for line in contents.lines() {
-        if line.contains(query) {
-            result.push(line)
-        }
-    }
-
-    result
+pub fn search<'a>(query: &'a str, contents: &'a str) -> Box<dyn Iterator<Item = &'a str> + 'a> {
+    Box::new(contents.lines().filter(move |line| line.contains(query)))
 }
 
 #[cfg(test)]
@@ -91,7 +93,10 @@ safe, fast, productive.
 Pick three.
 Duct tape";
 
-        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+        assert_eq!(
+            Some("safe, fast, productive."),
+            search(query, contents).next()
+        );
     }
 
     #[test]
@@ -102,10 +107,9 @@ Rust:
 safe, fast, productive.
 Pick three.
 Trust me.";
+        let mut result = search_case_insensitive(query, contents);
 
-        assert_eq!(
-            vec!["Rust:", "Trust me."],
-            search_case_insensitive(query, contents)
-        );
+        assert_eq!(Some("Rust:"), result.next());
+        assert_eq!(Some("Trust me."), result.next());
     }
 }
