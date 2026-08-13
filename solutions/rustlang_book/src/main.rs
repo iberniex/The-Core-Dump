@@ -1,5 +1,7 @@
 use rustlang_book::{
-    generic_types::largest_number, lifetimes::largest, smart_pointers::testing_box_smart_pointer,
+    generic_types::largest_number,
+    lifetimes::largest,
+    smart_pointers::{learning_on_arc_smart_pointer, testing_box_smart_pointer},
 };
 fn main() {
     let list_of_nums = vec![23, 342, 123, 12312, 31223];
@@ -15,4 +17,5 @@ fn main() {
     // closure_runner();
 
     testing_box_smart_pointer();
+    learning_on_arc_smart_pointer();
 }
