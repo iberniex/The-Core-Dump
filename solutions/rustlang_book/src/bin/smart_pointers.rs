@@ -1,4 +1,6 @@
-use std::{ops::Deref, rc::Rc, sync::Arc, thread};
+use std::{cell::RefCell, ops::Deref, rc::Rc, sync::Arc, thread};
+
+use crate::List::{Cons, Nil};
 
 #[derive(Debug)]
 struct MyBox<T>(T);
@@ -18,9 +20,9 @@ impl<T> Deref for MyBox<T> {
     }
 }
 
-#[allow(dead_code, unused)]
+#[derive(Debug)]
 enum List {
-    Cons(i32, Rc<List>),
+    Cons(Rc<RefCell<i32>>, Rc<List>),
     Nil,
 }
 
@@ -36,59 +38,6 @@ impl Drop for CustomSmartPointer {
     fn drop(&mut self) {
         println!("Dropping CustomSmartPointer with data {}", self.string)
     }
-}
-
-/// calling s.drop() from std::mem::drop
-/// would lead to a double free error cause rust calls s.drop() anyway.
-///
-///```
-///
-/// #[derive(Debug, Clone)]
-/// struct CustomSmartPointer {
-///     string: String,
-/// }
-///
-/// impl Drop for CustomSmartPointer {
-///     fn drop(&mut self) {
-///         println!("Dropping CustomSmartPointer with data {}", self.string)
-///     }
-/// }
-///
-/// let v = CustomSmartPointer {
-/// string: String::from("Example test"),
-/// };
-/// drop(v);
-/// ```
-pub fn testing_box_smart_pointer() {
-    let s = MyBox::new(5);
-
-    let r = Box::new(6);
-
-    println!("{:?}", s);
-    println!("{:?}", r);
-
-    println!("{}", *s);
-    println!("{}", *r);
-
-    let a = Rc::new(List::Cons(5, Rc::new(List::Cons(10, Rc::new(List::Nil)))));
-    println!("count after creating a = {}", Rc::strong_count(&a));
-    let _b = List::Cons(3, Rc::clone(&a));
-
-    println!("count after creating b = {}", Rc::strong_count(&a));
-
-    {
-        let _c = List::Cons(2, Rc::clone(&a));
-        println!("count after creating c = {}", Rc::strong_count(&a));
-    }
-
-    println!("counf after c goes out of scope = {}", Rc::strong_count(&a));
-
-    let s = CustomSmartPointer {
-        string: String::from("Ready"),
-    };
-
-    drop(s);
-    println!("The smart pointer has been dropped before the end of main.")
 }
 
 // Shared ownership between threads that work concurrently I guess?
@@ -113,4 +62,65 @@ pub fn learning_on_arc_smart_pointer() {
     for handle in join_handles.into_iter() {
         handle.join().unwrap()
     }
+}
+
+/// calling s.drop() from std::mem::drop
+/// would lead to a double free error cause rust calls s.drop() anyway.
+///
+///```
+///
+/// #[derive(Debug, Clone)]
+/// struct CustomSmartPointer {
+///     string: String,
+/// }
+///
+/// impl Drop for CustomSmartPointer {
+///     fn drop(&mut self) {
+///         println!("Dropping CustomSmartPointer with data {}", self.string)
+///     }
+/// }
+///
+/// let v = CustomSmartPointer {
+/// string: String::from("Example test"),
+/// };
+/// drop(v);
+/// ```
+fn main() {
+    let s = MyBox::new(5);
+
+    let r = Box::new(6);
+
+    println!("{:?}", s);
+    println!("{:?}", r);
+
+    println!("{}", *s);
+    println!("{}", *r);
+
+    let value = Rc::new(RefCell::new(10));
+    let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
+    println!("count after creating a = {}", Rc::strong_count(&a));
+    let b = List::Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
+
+    println!("count after creating b = {}", Rc::strong_count(&a));
+
+    let c = List::Cons(Rc::new(RefCell::new(2)), Rc::clone(&a));
+
+    println!("count after creating c = {}", Rc::strong_count(&a));
+    *value.borrow_mut() += 10;
+    *value.borrow_mut() += 10;
+
+    match &b {
+        Cons(x, y) => println!("{x:?} - {y:?}"),
+        Nil => println!("Nil"),
+    }
+    println!("a after = {a:?}, value = {:?}", a);
+    println!("b after = {b:?}");
+    println!("c after = {c:?}");
+
+    let s = CustomSmartPointer {
+        string: String::from("Ready"),
+    };
+
+    drop(s);
+    println!("The smart pointer has been dropped before the end of main.")
 }
