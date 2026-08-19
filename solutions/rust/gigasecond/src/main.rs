@@ -1,11 +1,13 @@
 use time::{PrimitiveDateTime as dt, SignedDuration};
 
 pub fn after(start: dt) -> dt {
-    let Some(date) = start.checked_add(SignedDuration::new(1000000000, 0)) else {
-        return start;
-    };
-
-    date
+    // let Some(date) = start.checked_add(SignedDuration::new(1000000000, 0)) else {
+    //     return start;
+    // };
+    //
+    // date
+    //
+    start + SignedDuration::seconds(1_000_000_000)
 }
 
 fn main() {
