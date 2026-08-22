@@ -12,17 +12,21 @@ impl std::fmt::Display for Clock {
 impl Clock {
     pub fn new(hours: i32, minutes: i32) -> Self {
         // todo!("Construct a new Clock from {hours} hours and {minutes} minutes");
-        Self {
-            hours: hours,
-            minutes: minutes,
-        }
+
+        let total_minutes = hours * 60 + minutes;
+
+        Self::from_minutes(total_minutes)
     }
 
     pub fn add_minutes(&self, minutes: i32) -> Self {
         // todo!("Add {minutes} minutes to existing Clock time");
         let total_minutes = self.hours * 60 + self.minutes + minutes;
 
-        let positive_minutes = total_minutes.rem_euclid(24 * 60);
+        Self::from_minutes(total_minutes)
+    }
+
+    pub fn from_minutes(minutes: i32) -> Self {
+        let positive_minutes = minutes.rem_euclid(24 * 60);
 
         let hours = (positive_minutes / 60) % 24;
         let minutes = positive_minutes % 60;
