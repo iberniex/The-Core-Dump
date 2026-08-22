@@ -6,4 +6,5 @@ edition = "2024"
 
 [dependencies]
 rand = "0.10.2"
+trpl = "0.3.0"
 
