@@ -24,11 +24,33 @@ pub fn faster_smaller_numbers_than_current(nums: Vec<i32>) -> Vec<i32> {
 
     result
 }
+
+pub fn big_theta_n_plus_k_smaller_numbers_than_current(nums: Vec<i32>) -> Vec<i32> {
+    // Step 1: creating a frequency table for a range of values
+    // 0..100
+    // to store the values freqeuncy in the range
+    //
+    let mut count = vec![0; 100];
+    for &num in nums.iter() {
+        count[num as usize] += 1;
+    }
+
+    // Step 2: Implementing the prefix sum of the frequencies
+    // This shows the counter of the values in the backend
+    let mut running_sum = 0;
+    for i in 0..100 {
+        let temp = count[i];
+        count[i] = running_sum;
+        running_sum += temp;
+    }
+
+    nums.into_iter().map(|num| count[num as usize]).collect()
+}
 fn main() {}
 
 #[cfg(test)]
 mod test {
-    use crate::smaller_numbers_than_current;
+    use crate::{big_theta_n_plus_k_smaller_numbers_than_current, smaller_numbers_than_current};
 
     #[test]
     fn test_smaller_num_1() {
@@ -48,6 +70,13 @@ mod test {
     fn test_smaller_num_3() {
         assert_eq!(
             smaller_numbers_than_current(vec![7, 7, 7, 7]),
+            vec![0, 0, 0, 0]
+        );
+    }
+    #[test]
+    fn test_smaller_num_4() {
+        assert_eq!(
+            big_theta_n_plus_k_smaller_numbers_than_current(vec![7, 7, 7, 7]),
             vec![0, 0, 0, 0]
         );
     }
