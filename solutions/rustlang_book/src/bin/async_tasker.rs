@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{pin::Pin, time::Duration};
 
 fn main() {
     trpl::block_on(async {
@@ -56,6 +56,10 @@ fn main() {
             }
         };
 
-        trpl::join!(tx_fut1, tx_fut, rx_fut);
+        let futures: Vec<Pin<Box<dyn Future<Output = ()>>>> =
+            vec![Box::pin(tx_fut1), Box::pin(tx_fut), Box::pin(rx_fut)];
+
+        // trpl::join!(tx_fut1, tx_fut, rx_fut);
+        trpl::join_all(futures).await;
     });
 }
