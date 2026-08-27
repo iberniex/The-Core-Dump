@@ -45,7 +45,11 @@ pub fn eval_rpn(tokens: Vec<String>) -> i32 {
     stack[0]
 }
 fn main() {
-    todo!();
+    let tokens = vec!["2", "1", "+", "3", "*"]
+        .into_iter()
+        .map(String::from)
+        .collect();
+    println!("{}", eval_rpn(tokens));
 }
 
 #[cfg(test)]
