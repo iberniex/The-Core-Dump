@@ -7,13 +7,14 @@ fn main() {
     static mut STATIC: i32 = 55;
 
     thread::spawn(move || unsafe {
-        // WARNING: don't do this 
+        // WARNING: don't do this
         STATIC += 1;
-    })
+    });
 
+    unsafe {
+        let reddy = STATIC;
+        // NOTE: You can't reference static values cause it's denied by default
 
-    let reddy = STATIC;
-    // NOTE: You can't reference static values cause it's denied by default
-
-    println!("{reddy}");
+        println!("{reddy}");
+    }
 }
