@@ -330,6 +330,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "hello_macro_derive"
+version = "0.1.0"
+dependencies = [
+ "quote",
+ "syn 2.0.119",
+]
+
+[[package]]
 name = "html5ever"
 version = "0.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1012,6 +1020,7 @@ checksum = "6b1e7f9a428571be2dc5bc0505c13fb6bf936822b894ec87abf8a08a4e51742d"
 name = "rustlang_book"
 version = "0.1.0"
 dependencies = [
+ "hello_macro_derive",
  "rand 0.10.2",
  "trpl",
 ]

@@ -7,4 +7,4 @@ edition = "2024"
 [dependencies]
 rand = "0.10.2"
 trpl = "0.3.0"
-
+hello_macro_derive = { path = "./hello_macro_derive" }
