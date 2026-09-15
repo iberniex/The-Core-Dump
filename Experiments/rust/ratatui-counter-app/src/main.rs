@@ -1,145 +1,56 @@
-use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
-use ratatui::{
-    DefaultTerminal, Frame,
-    buffer::Buffer,
-    layout::Rect,
-    style::Stylize,
-    symbols::border,
-    text::Line,
-    widgets::{Block, Paragraph, Widget},
-};
-use std::io;
+/// application
+pub mod app;
+
+/// Terminal Event Handler.
+pub mod event_t;
+
+/// Widget renderer
+pub mod ui;
+
+/// Terminal User Interface.
+pub mod tui;
+
+/// Application updater
+pub mod update;
+
+use app::App;
+use event_t::{Event, EventHandler};
+
+use color_eyre::Result;
+use ratatui::{Terminal, backend::CrosstermBackend};
+
+use crate::tui::Tui;
 
 /// Common Patterns found in creating ratatui apps
 /// 1. Initialize the terminal
 /// 2. Run the application in a loop until the user exits the app
 /// 3. Restore the terminal back to its original state.
-fn main() -> io::Result<()> {
+fn main() -> Result<()> {
     // `ratatui::run` calls the initializer and the restore methods
     // and then creates and run the App.
-    ratatui::run(|terminal| App::default().run(terminal))
-}
+    // Create the application
+    let mut app = App::new();
 
-#[derive(Debug, Default)]
-pub struct App {
-    counter: u8,
-    exit: bool,
-}
+    // Initialize the terminal user Interface
+    let backend = CrosstermBackend::new(std::io::stderr());
+    let terminal = Terminal::new(backend);
+    let events = EventHandler::new(250);
 
-impl App {
-    // runs the application;s main loop until the user quits
-    pub fn run(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {
-        while !self.exit {
-            terminal.draw(|frame| self.draw(frame))?;
-            self.handle_events()?;
-        }
-        Ok(())
-    }
+    let mut tui = Tui::new(terminal?, events);
+    tui.enter()?;
 
-    fn draw(&self, frame: &mut Frame) {
-        frame.render_widget(self, frame.area());
-    }
-
-    fn handle_events(&mut self) -> io::Result<()> {
-        match event::read()? {
-            // it's important to check that the event is a key press event as
-            Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
-                self.handle_key_event(key_event)
-            }
-            _ => (),
+    while !app.should_quit {
+        // Render the user interface.
+        tui.draw(&mut app)?;
+        //Handle events.
+        match tui.events.next()? {
+            Event::Tick => {}
+            Event::Key(key_event) => update::update(&mut app, key_event),
+            Event::Mouse(_) => {}
+            Event::Resize(_, _) => {}
         };
-
-        Ok(())
     }
 
-    fn exit(&mut self) {
-        self.exit = true;
-    }
-
-    fn increment_counter(&mut self) {
-        self.counter += 1;
-    }
-
-    fn decrement_counter(&mut self) {
-        self.counter -= 1;
-    }
-
-    fn handle_key_event(&mut self, key_event: KeyEvent) {
-        match key_event.code {
-            KeyCode::Char('q') => self.exit(),
-            KeyCode::Left => self.decrement_counter(),
-            KeyCode::Right => self.increment_counter(),
-            _ => {}
-        }
-    }
-}
-
-impl Widget for &App {
-    fn render(self, area: Rect, buf: &mut Buffer) {
-        let title = Line::from(" Counter App Tutorial ".bold());
-        let instructions = Line::from(vec![
-            " Decrement ".into(),
-            "<Left>".blue().bold(),
-            " Increment ".into(),
-            "<Right>".blue().bold(),
-            " Quit ".into(),
-            "<Q> ".blue().bold(),
-        ]);
-
-        let block = Block::bordered()
-            .title(title.centered())
-            .title_bottom(instructions.centered())
-            .border_set(border::THICK);
-
-        let counter_text = Line::from(vec!["Value: ".into(), self.counter.to_string().yellow()]);
-
-        Paragraph::new(counter_text)
-            .centered()
-            .block(block)
-            .render(area, buf);
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use ratatui::style::Style;
-
-    #[test]
-    fn render() {
-        let app = App::default();
-        let mut buf = Buffer::empty(Rect::new(0, 0, 50, 4));
-
-        app.render(buf.area, &mut buf);
-
-        let mut expected = Buffer::with_lines(vec![
-            "┏━━━━━━━━━━━━━ Counter App Tutorial ━━━━━━━━━━━━━┓",
-            "┃                    Value: 0                    ┃",
-            "┃                                                ┃",
-            "┗━ Decrement <Left> Increment <Right> Quit <Q> ━━┛",
-        ]);
-        let title_style = Style::new().bold();
-        let counter_style = Style::new().yellow();
-        let key_style = Style::new().blue().bold();
-        expected.set_style(Rect::new(14, 0, 22, 1), title_style);
-        expected.set_style(Rect::new(28, 1, 1, 1), counter_style);
-        expected.set_style(Rect::new(13, 3, 6, 1), key_style);
-        expected.set_style(Rect::new(30, 3, 7, 1), key_style);
-        expected.set_style(Rect::new(43, 3, 4, 1), key_style);
-
-        assert_eq!(buf, expected);
-    }
-    #[test]
-    fn handle_key_event() {
-        let mut app = App::default();
-        app.handle_key_event(KeyCode::Right.into());
-        assert_eq!(app.counter, 1);
-
-        app.handle_key_event(KeyCode::Left.into());
-        assert_eq!(app.counter, 0);
-
-        let mut app = App::default();
-        app.handle_key_event(KeyCode::Char('q').into());
-        assert!(app.exit);
-    }
+    tui.exit()?;
+    Ok(())
 }
